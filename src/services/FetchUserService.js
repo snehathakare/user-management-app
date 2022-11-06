@@ -20,8 +20,8 @@ const remove = id => {
     return http.delete(`/users/${id}`);
 };
 
-const findUserByGroup = groupId => {
-    return http.get(`/users?groupId=${groupId}`);
+const findUser = term => {
+    return http.get(`/users?search=${term}`);
 };
 
 const FetchUserService = {
@@ -30,7 +30,7 @@ const FetchUserService = {
     create,
     update,
     remove,
-    findUserByGroup
+    findUser
 };
 
 export default FetchUserService;

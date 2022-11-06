@@ -20,12 +20,16 @@ const remove = id => {
     return http.delete(`/groups/${id}`);
 };
 
+const findGroup = term => {
+    return http.delete(`/groups?name=${term}`);
+};
 const FetchGroupService = {
     getAll,
     get,
     create,
     update,
-    remove
+    remove,
+    findGroup
 };
 
 export default FetchGroupService;
