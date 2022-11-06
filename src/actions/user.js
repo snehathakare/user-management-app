@@ -62,3 +62,16 @@ export const deleteUser = (id) => async (dispatch) => {
         console.log(err);
     }
 };
+
+export const findUser = (title) => async (dispatch) => {
+    try {
+        const res = await FetchUserService.findUser(title);
+
+        dispatch({
+            type: RETRIEVE_USERS,
+            payload: res.data,
+        });
+    } catch (err) {
+        console.log(err);
+    }
+};

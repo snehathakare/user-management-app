@@ -7,9 +7,9 @@ import {
 
 import FetchGroupService from "../services/FetchGroupService";
 
-export const createGroup = (title, description) => async (dispatch) => {
+export const createGroup = (name, description) => async (dispatch) => {
     try {
-        const res = await FetchGroupService.create({ title, description });
+        const res = await FetchGroupService.create({ name, description });
 
         dispatch({
             type: CREATE_GROUP,
@@ -57,6 +57,18 @@ export const deleteGroup = (id) => async (dispatch) => {
         dispatch({
             type: DELETE_GROUP,
             payload: { id },
+        });
+    } catch (err) {
+        console.log(err);
+    }
+};
+export const findGroup = (title) => async (dispatch) => {
+    try {
+        const res = await FetchGroupService.findUser(title);
+
+        dispatch({
+            type: RETRIEVE_GROUPS,
+            payload: res.data,
         });
     } catch (err) {
         console.log(err);
