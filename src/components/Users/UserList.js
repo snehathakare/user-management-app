@@ -1,73 +1,65 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { Box, List, ListItem, Typography } from '@mui/material';
+import { Stack, Box, TableBody, Table, TableContainer, Paper, TableHead, TableCell, TableRow } from '@mui/material';
 import {
     retrieveUsers,
+    deleteUser
 } from "../../actions/user";
 
 const UserList = () => {
-    const [currentUser, setCurrentUser] = useState(null);
-    const [currentIndex, setCurrentIndex] = useState(-1);
-
     const users = useSelector(state => state.users);
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(retrieveUsers());
-    });
+    }, []);
 
-    const setActiveUser = (user, index) => {
-        setCurrentUser(user);
-        setCurrentIndex(index);
+    const removeUser = (user_id) => {
+        dispatch(deleteUser(user_id))
+            .catch(e => {
+                console.log(e);
+            });
     };
 
     return (
         <Box>
-            <div>
-                <Typography variant="h4" component="h2">
-                    USER LIST
-                </Typography>
-                <List>
-                    {users &&
-                        users.map((user, index) => (
-                            <ListItem
-                                onClick={() => setActiveUser(user, index)}
-                                key={index}
+            <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>User</TableCell>
+                            <TableCell align="right">Citizenship</TableCell>
+                            <TableCell align="right">Resident of</TableCell>
+                            <TableCell align="center">Actions</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {users.map((item) => (
+                            < TableRow
+                                key={item.id}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
-                                <Typography variant="overline" display="block">
-                                    {user.name}
-                                </Typography>
-                            </ListItem>
+                                <TableCell component="th" scope="row">
+                                    {item.name}
+                                </TableCell>
+                                <TableCell align="right">{item.citizenship}</TableCell>
+                                <TableCell align="right">{item.residence}</TableCell>
+                                <TableCell align="right">
+                                    <Stack direction="row" spacing={1} justifyContent="center">
+                                        <Link to={"/users/" + item.id}>Show</Link>
+                                        <Link to={"/users/edit/" + item.id}>Edit</Link>
+                                        <Link onClick={() => { removeUser(item.id) }} to='/users'>
+                                            Delete
+                                        </Link>
+                                    </Stack>
+                                </TableCell>
+                            </TableRow>
                         ))}
-                </List>
-            </div>
-            <Box sx={{ display: 'flex' }}>
-                {currentUser ? (
-                    <div>
-                        <Typography variant="h6" component="h2">
-                            CURRENT USER
-                        </Typography>
-                        <Typography variant="overline" display="block" gutterBottom>
-                            Title: {currentUser.name}
-                        </Typography>
-                        <Typography variant="overline" display="block" gutterBottom>
-                            Nationality: {currentUser.citizenship}
-                        </Typography>
-                        <Typography variant="overline" display="block" gutterBottom>
-                            Active since: {currentUser.createdAt}
-                        </Typography>
-                        <Link to={"/users/" + currentUser.id}>
-                            Edit
-                        </Link>
-                    </div>
-                ) : (
-                    <Typography variant="caption" display="block" gutterBottom>
-                        Click on a user name...
-                    </Typography>
-                )}
-            </Box>
-        </Box>
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Box >
 
     );
 };
